@@ -35,7 +35,7 @@ check(_Client, undefined, _Env) ->
 check(_Client, Token, Env) ->
     case _Client of
         {_,_,_, <<"jwt">>,_,_,_,_,_,_,_,_} ->
-            lager:debug("This is internal JWT token~n"),
+            lager:debug("This JWT token is from microservices"),
             case catch jwerl:header(Token) of
                     {'EXIT', _} -> ignore; % Not a JWT Token
                     Headers -> verify_token(Headers, Token, Env)
