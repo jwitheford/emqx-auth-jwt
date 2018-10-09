@@ -34,10 +34,16 @@ check(_Client, undefined, _Env) ->
     {error, token_undefined};
 check(_Client, Token, Env) ->
     io:format("JWT client name:~p~n", [_Client]),
-    case catch jwerl:header(Token) of
-        {'EXIT', _} -> ignore; % Not a JWT Token
-        Headers -> verify_token(Headers, Token, Env)
+    case _Client of
+        {_,_,_, <<"jwt">>,_,_,_,_,_,_,_,_} ->
+            io:format("JWT token~n"),
+            case catch jwerl:header(Token) of
+                    {'EXIT', _} -> ignore; % Not a JWT Token
+                    Headers -> verify_token(Headers, Token, Env)
+                end;
+        _Else -> ignore
     end.
+
 
 verify_token(#{alg := <<"HS", _/binary>>}, _Token, #{secret := undefined}) ->
     {error, hmac_secret_undefined};
