@@ -33,10 +33,9 @@ init(Env) ->
 check(_Client, undefined, _Env) ->
     {error, token_undefined};
 check(_Client, Token, Env) ->
-    io:format("JWT client name:~p~n", [_Client]),
     case _Client of
         {_,_,_, <<"jwt">>,_,_,_,_,_,_,_,_} ->
-            io:format("JWT token~n"),
+            lager:debug("This is internal JWT token~n"),
             case catch jwerl:header(Token) of
                     {'EXIT', _} -> ignore; % Not a JWT Token
                     Headers -> verify_token(Headers, Token, Env)
